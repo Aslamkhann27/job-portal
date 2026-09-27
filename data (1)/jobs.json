@@ -1,0 +1,102 @@
+[
+    {
+        "id": 1,
+        "title": "Frontend Developer",
+        "company": "Nazaara Tech Solutions",
+        "location": "Pune, Maharashtra",
+        "type": "Full-time",
+        "category": "Development",
+        "salary": "INR 6,00,000 - INR 9,00,000 per year",
+        "posted": "2 days ago",
+        "description": "Work on customer-facing web pages for retail clients with a practical and clean UI approach.",
+        "recruiter": "Ayesha Khan",
+        "skill_test_required": true,
+        "requirements": [
+            "2+ years with JavaScript, HTML, and CSS.",
+            "Comfortable with Bootstrap and responsive layouts.",
+            "Able to work with product and QA teams."
+        ],
+        "created_by": null,
+        "created_by_name": "Ayesha Khan"
+    },
+    {
+        "id": 2,
+        "title": "Backend PHP Developer",
+        "company": "Sahyadri Digital Services",
+        "location": "Bengaluru",
+        "type": "Full-time",
+        "category": "Development",
+        "salary": "INR 7,50,000 - INR 11,00,000 per year",
+        "posted": "1 day ago",
+        "description": "Build and maintain PHP APIs for internal recruitment and payroll modules.",
+        "recruiter": "Rohit Sharma",
+        "skill_test_required": true,
+        "requirements": [
+            "3+ years of PHP experience.",
+            "Good understanding of MySQL and REST APIs.",
+            "Basic knowledge of secure coding practices."
+        ],
+        "created_by": null,
+        "created_by_name": "Rohit Sharma"
+    },
+    {
+        "id": 3,
+        "title": "UI\/UX Designer",
+        "company": "Gulmohar Design Studio",
+        "location": "Mumbai",
+        "type": "Contract",
+        "category": "Design",
+        "salary": "INR 4,80,000 - INR 8,00,000 per year",
+        "posted": "4 days ago",
+        "description": "Design usable product screens for job seekers across mobile and desktop.",
+        "recruiter": "Fatima Sheikh",
+        "skill_test_required": false,
+        "requirements": [
+            "Portfolio of product design work.",
+            "Proficiency in Figma or similar tools.",
+            "Understanding of accessibility and layout hierarchy."
+        ],
+        "created_by": null,
+        "created_by_name": "Fatima Sheikh"
+    },
+    {
+        "id": 4,
+        "title": "Digital Marketing Specialist",
+        "company": "Udaan Hiring Network",
+        "location": "Delhi",
+        "type": "Part-time",
+        "category": "Marketing",
+        "salary": "INR 3,60,000 - INR 6,50,000 per year",
+        "posted": "3 days ago",
+        "description": "Run practical digital campaigns to increase quality job applications in Tier 1 and Tier 2 cities.",
+        "recruiter": "Vikram Iyer",
+        "skill_test_required": false,
+        "requirements": [
+            "Experience with paid campaigns and analytics.",
+            "Good written communication in English.",
+            "Ability to track and improve campaign performance."
+        ],
+        "created_by": null,
+        "created_by_name": "Vikram Iyer"
+    },
+    {
+        "id": 5,
+        "title": "Data Analyst",
+        "company": "Bharat Talent Insights",
+        "location": "Hyderabad",
+        "type": "Full-time",
+        "category": "Analytics",
+        "salary": "INR 5,50,000 - INR 8,50,000 per year",
+        "posted": "5 days ago",
+        "description": "Prepare hiring reports and dashboards to help recruiters and HR managers make better decisions.",
+        "recruiter": "Imran Qureshi",
+        "skill_test_required": true,
+        "requirements": [
+            "Strong SQL and spreadsheet knowledge.",
+            "Experience with BI tools.",
+            "Comfortable sharing insights with non-technical teams."
+        ],
+        "created_by": null,
+        "created_by_name": "Imran Qureshi"
+    }
+]

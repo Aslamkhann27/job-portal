@@ -1,0 +1,16 @@
+[
+    {
+        "job_id": 1,
+        "job_title": "Frontend Developer",
+        "user_id": "user_69c559aa1492f4.80257835",
+        "account_email": "aslamkhan@aslam.com",
+        "name": "Aslam Khan",
+        "email": "aslamkhan@aslam.com",
+        "resume": "http:\/\/localhost:8000\/job.php?id=1#apply",
+        "message": "Afs",
+        "skill_test_score": null,
+        "skill_test_status": "Not Attempted",
+        "skill_test_submitted_at": null,
+        "applied_at": "2026-03-26T17:07:33+01:00"
+    }
+]
