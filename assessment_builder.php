@@ -32,6 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         for ($index = 0; $index < 5; $index++) {
             $item = $submitted[$index] ?? [];
+            if (!is_array($item)) {
+                $item = [];
+            }
             $questionText = trim((string)($item['question'] ?? ''));
             $rawOptions = is_array($item['options'] ?? null) ? $item['options'] : [];
             $options = array_map('trim', $rawOptions);
