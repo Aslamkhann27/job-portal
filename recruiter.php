@@ -190,6 +190,7 @@ function cc_field(array $job = null, string $key = '', string $default = ''): st
                                             </div>
                                             <div class="d-flex flex-column gap-2">
                                                 <a class="btn btn-outline-primary btn-sm" href="job.php?id=<?php echo (int)($job['id'] ?? 0); ?>">View</a>
+                                                <a class="btn btn-outline-success btn-sm" href="assessment_builder.php?id=<?php echo (int)($job['id'] ?? 0); ?>">Build test</a>
                                             </div>
                                         </div>
                                     </div>
