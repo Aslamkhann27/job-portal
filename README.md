@@ -12,7 +12,8 @@ The project is intentionally database-free: application data is stored in JSON f
 - Register as a candidate or recruiter; the first registered account becomes the single administrator account.
 - Submit applications with validation for name, email, resume URL, and cover note.
 - Prevent applications once a job's configured seat capacity is filled.
-- Take a five-question Mini Skill Test tailored to the job category.
+- Take a five-question skill assessment tailored to the job category or written by the recruiter.
+- Let recruiters create and update a five-question, four-option assessment for each of their jobs.
 - Require a skill-test attempt before application when a recruiter marks it mandatory.
 - Create and manage recruiter-owned job listings.
 - Review applications, remove jobs, and remove candidate accounts from the admin dashboard.
@@ -66,8 +67,9 @@ The test result is attached to the submitted application. A score of 60% or high
 2. Open the Recruiter Portal.
 3. Add a job with its company, location, type, category, salary, requirements, and seat count.
 4. Choose whether a Mini Skill Test is required before candidates can apply.
+5. Select **Build test** beside a job to write five role-specific questions, four answer options per question, and the correct answer.
 
-Recruiters can view the jobs they created. Job data is saved to `data/jobs.json`.
+Saving a recruiter-created assessment automatically makes the test compulsory for that job. Candidates see the custom questions instead of the category defaults. Recruiters can edit only assessments belonging to jobs they created. Job and assessment data are saved to `data/jobs.json`.
 
 ### Administrators
 
@@ -85,12 +87,15 @@ job-portal/
 |-- login.php                   # Session login
 |-- logout.php                  # Session logout
 |-- recruiter.php               # Recruiter job-posting portal
+|-- assessment_builder.php      # Recruiter assessment editor
 |-- admin.php                   # Administrator dashboard
 |-- includes/
 |   |-- auth.php                # JSON helpers, authentication, roles, sessions
 |   |-- job_repository.php      # Job loading, creation, and update helpers
 |   |-- jobs.php                # Seed job data
 |   `-- skill_tests.php         # Question banks and test-result helpers
+|-- tests/
+|   `-- skill_tests_test.php    # Assessment selection and scoring checks
 |-- assets/
 |   |-- css/style.css           # Custom styles
 |   `-- js/
@@ -102,6 +107,8 @@ job-portal/
     |-- applications.json       # Submitted applications
     `-- skill_tests.json        # Created automatically after a test attempt
 ```
+
+Run the lightweight assessment checks from the repository root with `php tests/skill_tests_test.php`.
 
 ## Data and reset behavior
 
