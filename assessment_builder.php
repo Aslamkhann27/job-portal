@@ -35,16 +35,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!is_array($item)) {
                 $item = [];
             }
-            $questionText = trim((string)($item['question'] ?? ''));
-            $rawOptions = is_array($item['options'] ?? null) ? $item['options'] : [];
-            $options = array_map('trim', $rawOptions);
+            $rawQuestion = $item['question'] ?? '';
+            $questionText = is_string($rawQuestion) ? trim($rawQuestion) : '';
+            $rawOptions = $item['options'] ?? [];
+            $options = [];
+
+            if (is_array($rawOptions)) {
+                foreach (array_values($rawOptions) as $rawOption) {
+                    $options[] = is_string($rawOption) ? trim($rawOption) : '';
+                }
+            }
+
             $answer = filter_var($item['answer'] ?? null, FILTER_VALIDATE_INT);
 
-            if ($questionText === '') {
-                $errors[] = 'Question ' . ($index + 1) . ' is required.';
+            if ($questionText === '' || strlen($questionText) > 500) {
+                $errors[] = 'Question ' . ($index + 1) . ' must contain between 1 and 500 characters.';
             }
             if (count($options) !== 4 || in_array('', $options, true)) {
-                $errors[] = 'Question ' . ($index + 1) . ' must have four non-empty options.';
+                $errors[] = 'Question ' . ($index + 1) . ' must have four non-empty text options.';
+            } else {
+                foreach ($options as $optionText) {
+                    if (strlen($optionText) > 250) {
+                        $errors[] = 'Each option for question ' . ($index + 1) . ' must be 250 characters or fewer.';
+                        break;
+                    }
+                }
             }
             if ($answer === false || $answer < 0 || $answer > 3) {
                 $errors[] = 'Choose the correct option for question ' . ($index + 1) . '.';
@@ -52,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $validated[] = [
                 'question' => $questionText,
-                'options' => array_values($options),
+                'options' => $options,
                 'answer' => $answer === false ? -1 : $answer
             ];
         }
