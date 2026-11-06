@@ -26,13 +26,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!hash_equals((string)$_SESSION['assessment_csrf'], $token)) {
         $errors[] = 'Your session expired. Refresh the page and try again.';
     } else {
-        $submitted = $_POST['questions'] ?? [];
+        $submitted = is_array($_POST['questions'] ?? null) ? $_POST['questions'] : [];
+        $questions = array_values($submitted);
         $validated = [];
 
         for ($index = 0; $index < 5; $index++) {
             $item = $submitted[$index] ?? [];
             $questionText = trim((string)($item['question'] ?? ''));
-            $options = array_map('trim', $item['options'] ?? []);
+            $rawOptions = is_array($item['options'] ?? null) ? $item['options'] : [];
+            $options = array_map('trim', $rawOptions);
             $answer = filter_var($item['answer'] ?? null, FILTER_VALIDATE_INT);
 
             if ($questionText === '') {
@@ -104,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <?php for ($option = 0; $option < 4; $option++): ?>
                                         <div class="col-md-6">
                                             <label class="form-label" for="q_<?php echo $index; ?>_option_<?php echo $option; ?>">Option <?php echo $option + 1; ?></label>
-                                            <input class="form-control" id="q_<?php echo $index; ?>_option_<?php echo $option; ?>" name="questions[<?php echo $index; ?>][options][]" maxlength="250" value="<?php echo htmlspecialchars($question['options'][$option] ?? ''); ?>" required>
+                                            <input class="form-control" id="q_<?php echo $index; ?>_option_<?php echo $option; ?>" name="questions[<?php echo $index; ?>][options][]" maxlength="250" value="<?php echo htmlspecialchars(is_array($question['options'] ?? null) ? ($question['options'][$option] ?? '') : ''); ?>" required>
                                         </div>
                                     <?php endfor; ?>
                                 </div>
