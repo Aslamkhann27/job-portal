@@ -48,6 +48,8 @@ No Composer packages, database server, or build step are required.
 4. Create an account. On a fresh data set, the first account registered is assigned the `admin` role. Later registrations can be candidates or recruiters.
 
 > The web server process must have write access to the `data/` directory, since registrations, job postings, applications, and skill-test attempts are saved there.
+>
+> **Security:** On Apache, `data/.htaccess` denies direct HTTP access to runtime JSON files, including account data and assessment answer keys. If you deploy with Nginx or another server that ignores `.htaccess`, configure an equivalent deny rule for `/data/` at the web-server level. PHP's built-in development server does not enforce `.htaccess`; do not expose it to untrusted networks. For production, move writable data outside the public document root.
 
 ## How to use the portal
 
