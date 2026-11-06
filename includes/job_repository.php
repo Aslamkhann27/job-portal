@@ -107,6 +107,31 @@ function cc_upsert_job(array $payload, array $currentUser): array
     return $data;
 }
 
+
+function cc_update_job_assessment(int $jobId, array $questions, array $currentUser): bool
+{
+    $jobs = cc_load_jobs();
+    $userId = (string)($currentUser['id'] ?? '');
+
+    foreach ($jobs as $index => $job) {
+        if ((int)($job['id'] ?? 0) !== $jobId) {
+            continue;
+        }
+
+        if ($userId === '' || (string)($job['created_by'] ?? '') !== $userId) {
+            return false;
+        }
+
+        $jobs[$index]['assessment_questions'] = array_values($questions);
+        $jobs[$index]['skill_test_required'] = true;
+        $jobs[$index]['assessment_updated_at'] = date('c');
+
+        return cc_save_jobs($jobs);
+    }
+
+    return false;
+}
+
 function cc_create_job(array $payload, array $currentUser): array
 {
     $payload['id'] = 0;

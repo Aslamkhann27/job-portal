@@ -96,8 +96,8 @@ if ($selectedJob) {
                     </div>
                     <div class="col-lg-4" id="apply">
                         <div class="job-card p-4">
-                            <h2 class="h5 mb-3">Mini Skill Test</h2>
-                            <p class="text-muted small">Take a quick 5-question skill test related to this role.</p>
+                            <h2 class="h5 mb-3">Job Assessment</h2>
+                            <p class="text-muted small"><?php echo !empty($selectedJob['assessment_questions']) ? 'Complete the recruiter-created 5-question assessment for this role.' : 'Take a quick 5-question skill test related to this role.'; ?></p>
                             <p class="small mb-2">
                                 <strong>Test Policy:</strong>
                                 <?php if ($isSkillTestRequired): ?>
