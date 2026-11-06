@@ -133,6 +133,20 @@ function cc_question_bank(): array
 
 function cc_get_questions_for_job(array $job): array
 {
+    $customQuestions = $job['assessment_questions'] ?? [];
+    if (is_array($customQuestions) && count($customQuestions) === 5) {
+        $validQuestions = true;
+        foreach ($customQuestions as $question) {
+            if (!is_array($question) || trim((string)($question['question'] ?? '')) === '' || count($question['options'] ?? []) !== 4 || !isset($question['answer']) || (int)$question['answer'] < 0 || (int)$question['answer'] > 3) {
+                $validQuestions = false;
+                break;
+            }
+        }
+        if ($validQuestions) {
+            return array_values($customQuestions);
+        }
+    }
+
     $bank = cc_question_bank();
     $category = $job['category'] ?? '';
 
