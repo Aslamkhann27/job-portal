@@ -9,6 +9,11 @@ $errors = [];
 $successMessage = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!cc_validate_csrf_token((string)($_POST['csrf_token'] ?? ''))) {
+        http_response_code(403);
+        exit('Invalid or expired form token. Please reload the recruiter page and try again.');
+    }
+
     $requirements = preg_split('/\r\n|\r|\n/', trim($_POST['requirements'] ?? ''));
 
     $payload = [
@@ -101,6 +106,7 @@ function cc_field(array $job = null, string $key = '', string $default = ''): st
                         <?php endif; ?>
 
                         <form method="post" class="row g-3">
+                            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cc_csrf_token(), ENT_QUOTES, 'UTF-8'); ?>">
                             <div class="col-12">
                                 <label class="form-label">Job Title</label>
                                 <input type="text" name="title" class="form-control" required>
