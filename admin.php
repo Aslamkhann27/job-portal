@@ -6,8 +6,14 @@ cc_require_admin();
 $user = cc_current_user();
 
 $statusMessage = '';
+$csrfToken = cc_csrf_token();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $submittedToken = $_POST['csrf_token'] ?? '';
+    if (!is_string($submittedToken) || !cc_validate_csrf_token($submittedToken)) {
+        http_response_code(403);
+        exit('Invalid or expired form token. Please go back, refresh the page, and try again.');
+    }
     $action = trim($_POST['action'] ?? '');
 
     if ($action === 'delete_job') {
@@ -144,6 +150,7 @@ usort($applications, function ($a, $b) {
                                                 <td><?php echo (int)($job['seats'] ?? 1); ?></td>
                                                 <td>
                                                     <form method="post" onsubmit="return confirm('Delete this job?');">
+                                                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8'); ?>">
                                                         <input type="hidden" name="action" value="delete_job">
                                                         <input type="hidden" name="job_id" value="<?php echo (int)($job['id'] ?? 0); ?>">
                                                         <button type="submit" class="btn btn-sm btn-outline-danger">Delete Job</button>
@@ -180,6 +187,7 @@ usort($applications, function ($a, $b) {
                                                 <td><?php echo htmlspecialchars($seeker['email'] ?? ''); ?></td>
                                                 <td>
                                                     <form method="post" onsubmit="return confirm('Delete this seeker account?');">
+                                                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8'); ?>">
                                                         <input type="hidden" name="action" value="delete_seeker">
                                                         <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($seeker['id'] ?? ''); ?>">
                                                         <button type="submit" class="btn btn-sm btn-outline-danger">Delete Seeker</button>
