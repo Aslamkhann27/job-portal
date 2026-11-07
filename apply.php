@@ -11,6 +11,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+if (!cc_validate_csrf_token((string)($_POST['csrf_token'] ?? ''))) {
+    http_response_code(403);
+    exit('Invalid or expired form token. Please return to the job page and try again.');
+}
+
 $currentUser = cc_current_user();
 if (!$currentUser) {
     $next = 'index.php';
