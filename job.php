@@ -138,6 +138,7 @@ if ($selectedJob) {
                                 <div class="alert alert-danger mb-3">All seats are filled for this job.</div>
                             <?php else: ?>
                                 <form action="apply.php" method="post" class="row g-3">
+                                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(cc_csrf_token(), ENT_QUOTES, 'UTF-8'); ?>">
                                     <input type="hidden" name="job_id" value="<?php echo (int)$selectedJob['id']; ?>">
                                     <input type="hidden" name="job_title" value="<?php echo htmlspecialchars($selectedJob['title']); ?>">
                                     <div class="col-12">
