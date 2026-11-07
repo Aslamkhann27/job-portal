@@ -2,6 +2,7 @@
 require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/skill_tests.php';
 require_once __DIR__ . '/includes/job_repository.php';
+require_once __DIR__ . '/includes/applications.php';
 
 cc_start_session();
 
@@ -61,10 +62,16 @@ if ($isSkillRequired && !$latestSkillResult) {
     $errors[] = 'Mini Skill Test is required for this job before applying.';
 }
 
+$applicationsFile = __DIR__ . '/data/applications.json';
+$applications = cc_read_json_file($applicationsFile);
+
+if (cc_user_has_applied_to_job($applications, (string)($currentUser['id'] ?? ''), $jobId)) {
+    $errors[] = 'You have already applied for this job.';
+}
+
 $seatsTotal = max(1, (int)($selectedJob['seats'] ?? 1));
-$applicationsForJob = cc_read_json_file(__DIR__ . '/data/applications.json');
 $appliedCount = 0;
-foreach ($applicationsForJob as $existingApplication) {
+foreach ($applications as $existingApplication) {
     if ((int)($existingApplication['job_id'] ?? 0) === $jobId) {
         $appliedCount++;
     }
@@ -75,22 +82,6 @@ if ($appliedCount >= $seatsTotal) {
 }
 
 if (!$errors) {
-    $storageDir = __DIR__ . '/data';
-    $storageFile = $storageDir . '/applications.json';
-
-    if (!is_dir($storageDir)) {
-        mkdir($storageDir, 0777, true);
-    }
-
-    $applications = [];
-    if (file_exists($storageFile)) {
-        $json = file_get_contents($storageFile);
-        $decoded = json_decode($json, true);
-        if (is_array($decoded)) {
-            $applications = $decoded;
-        }
-    }
-
     $applications[] = [
         'job_id' => $jobId,
         'job_title' => $selectedJob['title'],
@@ -106,7 +97,9 @@ if (!$errors) {
         'applied_at' => date('c')
     ];
 
-    file_put_contents($storageFile, json_encode($applications, JSON_PRETTY_PRINT));
+    if (!cc_write_json_file($applicationsFile, $applications)) {
+        $errors[] = 'Could not save your application right now. Please try again.';
+    }
 }
 ?>
 <!doctype html>
