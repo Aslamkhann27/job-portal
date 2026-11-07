@@ -18,6 +18,7 @@ The project is intentionally database-free: application data is stored in JSON f
 - Require a skill-test attempt before application when a recruiter marks it mandatory.
 - Create and manage recruiter-owned job listings.
 - Review applications, remove jobs, and remove candidate accounts from the admin dashboard.
+- Protect administrator delete actions with session-bound CSRF tokens.
 - Use responsive Bootstrap layouts with custom CSS and small JavaScript enhancements.
 
 ## Tech stack
@@ -76,7 +77,7 @@ Saving a recruiter-created assessment automatically makes the test compulsory fo
 
 ### Administrators
 
-The first account created in an empty `data/users.json` becomes the administrator. The admin dashboard provides a consolidated view of jobs, candidate accounts, and submitted applications, and allows removal of jobs and seeker accounts.
+The first account created in an empty `data/users.json` becomes the administrator. The admin dashboard provides a consolidated view of jobs, candidate accounts, and submitted applications, and allows removal of jobs and seeker accounts. State-changing admin forms require a session-bound CSRF token; stale or missing tokens are rejected.
 
 ## Project structure
 
@@ -118,6 +119,7 @@ Run the lightweight regression checks from the repository root:
 ```bash
 php tests/skill_tests_test.php
 php tests/applications_test.php
+php tests/csrf_test.php
 ```
 
 ## Data and reset behavior
