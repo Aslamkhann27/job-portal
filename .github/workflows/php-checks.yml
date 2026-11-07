@@ -20,3 +20,6 @@ jobs:
         run: php tests/skill_tests_test.php
       - name: Run application validation tests
         run: php tests/applications_test.php
+
+      - name: Run CSRF protection tests
+        run: php tests/csrf_test.php
