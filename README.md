@@ -11,6 +11,7 @@ The project is intentionally database-free: application data is stored in JSON f
 - Register, sign in, and sign out using PHP sessions.
 - Register as a candidate or recruiter; the first registered account becomes the single administrator account.
 - Submit applications with validation for name, email, resume URL, and cover note.
+- Prevent the same signed-in candidate from submitting more than one application to the same job.
 - Prevent applications once a job's configured seat capacity is filled.
 - Take a five-question skill assessment tailored to the job category or written by the recruiter.
 - Let recruiters create and update a five-question, four-option assessment for each of their jobs.
@@ -61,7 +62,7 @@ No Composer packages, database server, or build step are required.
 4. If a Mini Skill Test is required, complete it first.
 5. Submit a resume URL and cover note while seats remain available.
 
-The test result is attached to the submitted application. A score of 60% or higher is recorded as `Pass`; lower scores are recorded as `Needs Improvement`.
+A candidate account can apply only once to a particular job. Applications to other jobs remain unaffected. The test result is attached to the submitted application. A score of 60% or higher is recorded as `Pass`; lower scores are recorded as `Needs Improvement`.
 
 ### Recruiters
 
@@ -93,10 +94,12 @@ job-portal/
 |-- admin.php                   # Administrator dashboard
 |-- includes/
 |   |-- auth.php                # JSON helpers, authentication, roles, sessions
+|   |-- applications.php        # Application-related validation helpers
 |   |-- job_repository.php      # Job loading, creation, and update helpers
 |   |-- jobs.php                # Seed job data
 |   `-- skill_tests.php         # Question banks and test-result helpers
 |-- tests/
+|   |-- applications_test.php   # Duplicate application validation checks
 |   `-- skill_tests_test.php    # Assessment selection and scoring checks
 |-- assets/
 |   |-- css/style.css           # Custom styles
@@ -110,7 +113,12 @@ job-portal/
     `-- skill_tests.json        # Created automatically after a test attempt
 ```
 
-Run the lightweight assessment checks from the repository root with `php tests/skill_tests_test.php`.
+Run the lightweight regression checks from the repository root:
+
+```bash
+php tests/skill_tests_test.php
+php tests/applications_test.php
+```
 
 ## Data and reset behavior
 
