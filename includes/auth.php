@@ -29,6 +29,28 @@ function cc_write_json_file(string $filePath, array $data): bool
     return file_put_contents($filePath, json_encode($data, JSON_PRETTY_PRINT)) !== false;
 }
 
+function cc_csrf_token(): string
+{
+    cc_start_session();
+
+    if (empty($_SESSION['csrf_token']) || !is_string($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+
+    return $_SESSION['csrf_token'];
+}
+
+function cc_validate_csrf_token(string $token): bool
+{
+    cc_start_session();
+
+    $sessionToken = $_SESSION['csrf_token'] ?? '';
+    return is_string($sessionToken)
+        && $sessionToken !== ''
+        && $token !== ''
+        && hash_equals($sessionToken, $token);
+}
+
 function cc_users_file_path(): string
 {
     return __DIR__ . '/../data/users.json';
