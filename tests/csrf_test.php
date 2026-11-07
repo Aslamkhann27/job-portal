@@ -20,4 +20,8 @@ assert_same(true, cc_validate_csrf_token($token), 'The current session token sho
 assert_same(false, cc_validate_csrf_token(''), 'An empty token must be rejected.');
 assert_same(false, cc_validate_csrf_token(str_repeat('a', 64)), 'An unrelated token must be rejected.');
 
+$_SESSION['csrf_token'] = str_repeat('b', 64);
+assert_same(false, cc_validate_csrf_token($token), 'A token from a previous session state must be rejected.');
+assert_same(true, cc_validate_csrf_token(str_repeat('b', 64)), 'The current session token should remain valid after rotation.');
+
 echo "CSRF protection tests passed." . PHP_EOL;
