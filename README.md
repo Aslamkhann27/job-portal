@@ -19,6 +19,7 @@ The project is intentionally database-free: application data is stored in JSON f
 - Create and manage recruiter-owned job listings.
 - Review applications, remove jobs, and remove candidate accounts from the admin dashboard.
 - Protect administrator delete actions, candidate applications, and recruiter job creation with session-bound CSRF tokens.
+- Write JSON data through a temporary file and atomic rename so readers do not observe partially-written records.
 - Use responsive Bootstrap layouts with custom CSS and small JavaScript enhancements.
 
 ## Tech stack
@@ -101,17 +102,13 @@ job-portal/
 |   `-- skill_tests.php         # Question banks and test-result helpers
 |-- tests/
 |   |-- applications_test.php   # Duplicate application validation checks
+|   |-- csrf_test.php           # CSRF token validation checks
+|   |-- json_storage_test.php   # Atomic JSON persistence checks
 |   `-- skill_tests_test.php    # Assessment selection and scoring checks
 |-- assets/
 |   |-- css/style.css           # Custom styles
-|   `-- js/
-|       |-- app.js              # Job filtering and counter interactions
-|       `-- skill-test.js       # Skill-test timer
-`-- data/
-    |-- users.json              # Registered users and password hashes
-    |-- jobs.json               # Active job listings
-    |-- applications.json       # Submitted applications
-    `-- skill_tests.json        # Created automatically after a test attempt
+|   `-- js/                     # Browser behavior
+`-- data/                       # Runtime JSON persistence (not production data)
 ```
 
 Run the lightweight regression checks from the repository root:
@@ -120,6 +117,7 @@ Run the lightweight regression checks from the repository root:
 php tests/skill_tests_test.php
 php tests/applications_test.php
 php tests/csrf_test.php
+php tests/json_storage_test.php
 ```
 
 ## Data and reset behavior
@@ -131,7 +129,7 @@ The JSON files under `data/` are runtime data and may contain local test account
 - Removing `data/applications.json` clears submitted applications.
 - Removing `data/skill_tests.json` clears saved skill-test attempts.
 
-Do not use this JSON storage approach for concurrent or production workloads without adding file locking, access controls, backups, and a proper database.
+Do not use this JSON storage approach for concurrent or production workloads without adding file locking, access controls, backups, and a proper database. Atomic replacement protects readers from partial files, but it does not provide transaction isolation for competing read-modify-write operations.
 
 ## Important implementation notes
 
