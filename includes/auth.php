@@ -19,14 +19,41 @@ function cc_read_json_file(string $filePath): array
     return is_array($decoded) ? $decoded : [];
 }
 
+/**
+ * Persist JSON without exposing a partially-written file to concurrent readers.
+ *
+ * The temporary file is created in the destination directory so rename() stays
+ * on the same filesystem and can atomically replace the previous data file.
+ */
 function cc_write_json_file(string $filePath, array $data): bool
 {
     $dir = dirname($filePath);
-    if (!is_dir($dir)) {
-        mkdir($dir, 0777, true);
+    if (!is_dir($dir) && !mkdir($dir, 0770, true) && !is_dir($dir)) {
+        return false;
     }
 
-    return file_put_contents($filePath, json_encode($data, JSON_PRETTY_PRINT)) !== false;
+    $json = json_encode($data, JSON_PRETTY_PRINT);
+    if ($json === false) {
+        return false;
+    }
+
+    $temporaryPath = tempnam($dir, '.cc-json-');
+    if ($temporaryPath === false) {
+        return false;
+    }
+
+    $bytesWritten = file_put_contents($temporaryPath, $json, LOCK_EX);
+    if ($bytesWritten !== strlen($json)) {
+        @unlink($temporaryPath);
+        return false;
+    }
+
+    if (!rename($temporaryPath, $filePath)) {
+        @unlink($temporaryPath);
+        return false;
+    }
+
+    return true;
 }
 
 function cc_csrf_token(): string
