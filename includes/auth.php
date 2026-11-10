@@ -3,6 +3,23 @@
 function cc_start_session(): void
 {
     if (session_status() === PHP_SESSION_NONE) {
+        // Accept session IDs only from cookies and reject uninitialized IDs.
+        ini_set('session.use_strict_mode', '1');
+        ini_set('session.use_only_cookies', '1');
+
+        $isHttps = isset($_SERVER['HTTPS'])
+            && $_SERVER['HTTPS'] !== ''
+            && strtolower((string)$_SERVER['HTTPS']) !== 'off';
+
+        session_set_cookie_params([
+            'lifetime' => 0,
+            'path' => '/',
+            'domain' => '',
+            'secure' => $isHttps,
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ]);
+
         session_start();
     }
 }

@@ -19,6 +19,7 @@ The project is intentionally database-free: application data is stored in JSON f
 - Create and manage recruiter-owned job listings.
 - Review applications, remove jobs, and remove candidate accounts from the admin dashboard.
 - Protect administrator delete actions, candidate applications, and recruiter job creation with session-bound CSRF tokens.
+- Harden PHP sessions with strict session ID validation and HttpOnly, SameSite=Lax cookies; mark cookies Secure on HTTPS requests.
 - Write JSON data through a temporary file and atomic rename so readers do not observe partially-written records.
 - Use responsive Bootstrap layouts with custom CSS and small JavaScript enhancements.
 
@@ -135,6 +136,8 @@ Do not use this JSON storage approach for concurrent or production workloads wit
 
 - Passwords are stored with PHP's `password_hash()` and checked with `password_verify()`.
 - Login regenerates the session ID.
+- Session IDs are accepted only from cookies and validated in strict mode.
+- Session cookies are HttpOnly and SameSite=Lax, and are Secure when the request uses HTTPS. Configure HTTPS at the web server in production.
 - Protected recruiter and admin pages return a 403 response for unauthorized signed-in users.
 - Resume input expects a URL; this project does not upload files.
 - Bootstrap assets are fetched from a CDN, so an internet connection is needed for the full styled interface unless those assets are hosted locally.
