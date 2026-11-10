@@ -24,3 +24,5 @@ jobs:
         run: php tests/csrf_test.php
       - name: Run JSON storage tests
         run: php tests/json_storage_test.php
+      - name: Run session security tests
+        run: php tests/session_security_test.php
