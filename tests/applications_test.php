@@ -42,4 +42,14 @@ assert_same(
     'An invalid job ID must not match an application.'
 );
 
+$applicationRecords = [
+    ['application_id' => 'app-1', 'status' => 'Pending'],
+    ['application_id' => 'app-2', 'status' => 'Shortlisted']
+];
+assert_same(true, cc_update_application_status($applicationRecords, 'app-1', 'Under Review'), 'A known application should accept a valid status update.');
+assert_same('Under Review', $applicationRecords[0]['status'], 'The application status should be updated.');
+assert_same(false, cc_update_application_status($applicationRecords, 'app-1', 'Unknown'), 'Unknown statuses must be rejected.');
+assert_same(false, cc_update_application_status($applicationRecords, 'missing', 'Hired'), 'Unknown application IDs must not update records.');
+assert_same(false, cc_is_valid_application_status(''), 'An empty status must be invalid.');
+
 echo "Application validation tests passed." . PHP_EOL;

@@ -23,3 +23,33 @@ function cc_user_has_applied_to_job(array $applications, string $userId, int $jo
 
     return false;
 }
+
+
+function cc_application_statuses(): array
+{
+    return ['Pending', 'Under Review', 'Shortlisted', 'Rejected', 'Hired'];
+}
+
+function cc_is_valid_application_status(string $status): bool
+{
+    return in_array($status, cc_application_statuses(), true);
+}
+
+function cc_update_application_status(array &$applications, string $applicationId, string $status): bool
+{
+    if ($applicationId === '' || !cc_is_valid_application_status($status)) {
+        return false;
+    }
+
+    foreach ($applications as &$application) {
+        if (is_array($application) && hash_equals((string)($application['application_id'] ?? ''), $applicationId)) {
+            $application['status'] = $status;
+            $application['status_updated_at'] = date('c');
+            unset($application);
+            return true;
+        }
+    }
+    unset($application);
+
+    return false;
+}

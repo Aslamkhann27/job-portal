@@ -43,6 +43,8 @@ $companyCount = count($companies);
                         <?php endif; ?>
                         <?php if (cc_is_recruiter()): ?>
                             <li class="nav-item"><a class="nav-link" href="recruiter.php">Recruiter Portal</a></li>
+                        <?php elseif (($currentUser['role'] ?? '') === 'candidate'): ?>
+                            <li class="nav-item"><a class="nav-link" href="my_applications.php">My Applications</a></li>
                         <?php endif; ?>
                         <li class="nav-item"><span class="nav-link">Hi, <?php echo htmlspecialchars($currentUser['name']); ?></span></li>
                         <li class="nav-item"><a class="btn btn-outline-dark ms-lg-2" href="logout.php">Logout</a></li>
