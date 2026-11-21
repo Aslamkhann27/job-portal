@@ -11,13 +11,14 @@ The project is intentionally database-free: application data is stored in JSON f
 - Register, sign in, and sign out using PHP sessions.
 - Register as a candidate or recruiter; the first registered account becomes the single administrator account.
 - Submit applications with validation for name, email, resume URL, and cover note.
+- Track submitted applications from a candidate dashboard with clear review statuses.
 - Prevent the same signed-in candidate from submitting more than one application to the same job.
 - Prevent applications once a job's configured seat capacity is filled.
 - Take a five-question skill assessment tailored to the job category or written by the recruiter.
 - Let recruiters create and update a five-question, four-option assessment for each of their jobs.
 - Require a skill-test attempt before application when a recruiter marks it mandatory.
 - Create and manage recruiter-owned job listings.
-- Review applications, remove jobs, and remove candidate accounts from the admin dashboard.
+- Review applications, update their status (Pending, Under Review, Shortlisted, Rejected, or Hired), remove jobs, and remove candidate accounts from the admin dashboard.
 - Protect administrator delete actions, candidate applications, and recruiter job creation with session-bound CSRF tokens.
 - Harden PHP sessions with strict session ID validation and HttpOnly, SameSite=Lax cookies; mark cookies Secure on HTTPS requests.
 - Write JSON data through a temporary file and atomic rename so readers do not observe partially-written records.
@@ -65,7 +66,7 @@ No Composer packages, database server, or build step are required.
 4. If a Mini Skill Test is required, complete it first.
 5. Submit a resume URL and cover note while seats remain available.
 
-A candidate account can apply only once to a particular job. Applications to other jobs remain unaffected. The test result is attached to the submitted application. A score of 60% or higher is recorded as `Pass`; lower scores are recorded as `Needs Improvement`.
+A candidate account can apply only once to a particular job. Submitted applications appear in **My Applications**, where candidates can follow their status. New applications start as `Pending`; the administrator can move them through `Under Review`, `Shortlisted`, `Rejected`, or `Hired` from the admin dashboard. Applications to other jobs remain unaffected. The test result is attached to the submitted application. A score of 60% or higher is recorded as `Pass`; lower scores are recorded as `Needs Improvement`.
 
 ### Recruiters
 
@@ -95,6 +96,7 @@ job-portal/
 |-- recruiter.php               # Recruiter job-posting portal
 |-- assessment_builder.php      # Recruiter assessment editor
 |-- admin.php                   # Administrator dashboard
+|-- my_applications.php         # Candidate application history and status
 |-- includes/
 |   |-- auth.php                # JSON helpers, authentication, roles, sessions
 |   |-- applications.php        # Application-related validation helpers

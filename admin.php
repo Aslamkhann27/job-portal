@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/job_repository.php';
+require_once __DIR__ . '/includes/applications.php';
 
 cc_require_admin();
 $user = cc_current_user();
@@ -15,6 +16,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit('Invalid or expired form token. Please go back, refresh the page, and try again.');
     }
     $action = trim($_POST['action'] ?? '');
+
+    if ($action === 'update_application_status') {
+        $applicationId = trim((string)($_POST['application_id'] ?? ''));
+        $newStatus = trim((string)($_POST['status'] ?? ''));
+        $applicationsFile = __DIR__ . '/data/applications.json';
+        $applications = cc_read_json_file($applicationsFile);
+
+        if (cc_update_application_status($applications, $applicationId, $newStatus)) {
+            $statusMessage = cc_write_json_file($applicationsFile, $applications)
+                ? 'Application status updated successfully.'
+                : 'Could not save the application status. Please try again.';
+        } else {
+            $statusMessage = 'Invalid application or status. No changes were made.';
+        }
+    }
 
     if ($action === 'delete_job') {
         $jobId = (int)($_POST['job_id'] ?? 0);
@@ -215,6 +231,7 @@ usort($applications, function ($a, $b) {
                                     <th>Email</th>
                                     <th>Job</th>
                                     <th>Skill Test</th>
+                                    <th>Status</th>
                                     <th>Resume</th>
                                     <th>Applied At</th>
                                     <th>Message</th>
@@ -233,6 +250,24 @@ usort($applications, function ($a, $b) {
                                             <?php else: ?>
                                                 <small class="text-muted">Not Attempted</small>
                                             <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <?php $applicationStatus = (string)($application['status'] ?? 'Pending'); ?>
+                                            <form method="post" class="d-flex gap-2 align-items-center">
+                                                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8'); ?>">
+                                                <input type="hidden" name="action" value="update_application_status">
+                                                <input type="hidden" name="application_id" value="<?php echo htmlspecialchars($application['application_id'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                                                <select class="form-select form-select-sm" name="status" aria-label="Application status" <?php echo empty($application['application_id']) ? 'disabled' : ''; ?>>
+                                                    <?php foreach (cc_application_statuses() as $status): ?>
+                                                        <option value="<?php echo htmlspecialchars($status); ?>" <?php echo $applicationStatus === $status ? 'selected' : ''; ?>><?php echo htmlspecialchars($status); ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <?php if (!empty($application['application_id'])): ?>
+                                                    <button type="submit" class="btn btn-sm btn-outline-primary">Save</button>
+                                                <?php else: ?>
+                                                    <small class="text-muted">Legacy</small>
+                                                <?php endif; ?>
+                                            </form>
                                         </td>
                                         <td>
                                             <?php if (!empty($application['resume'])): ?>

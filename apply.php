@@ -88,6 +88,8 @@ if ($appliedCount >= $seatsTotal) {
 
 if (!$errors) {
     $applications[] = [
+        'application_id' => bin2hex(random_bytes(16)),
+        'status' => 'Pending',
         'job_id' => $jobId,
         'job_title' => $selectedJob['title'],
         'user_id' => $currentUser['id'] ?? null,
